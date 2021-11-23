@@ -18,6 +18,7 @@ router
   .post(
     body("msg").isString(),
     body("recipient_id").isMongoId(),
+    body("chat_id").exists(),  // если чата еще нет, передать null, иначе MongoId
     validatorCheckErrors,
     messageController.createMessage
   )
