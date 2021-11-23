@@ -22,7 +22,7 @@ class MessageService {
     await Participant.updateOne({ chat_id, user_id }, { last_read: new Date() });
     return await Message.find({ chat_id, deleted_at: { $exists: false } }).sort({ create_at: 1 }).skip(offset).limit(20);
   }
-  async sendMessage(chat_id, body, user_id, recipient_id) {
+  async createMessage(chat_id, body, user_id, recipient_id) {
     console.log(chat_id, body, user_id, recipient_id)
     if (!chat_id) {
       const chat = new Chat({})
@@ -32,7 +32,8 @@ class MessageService {
       await chat.save();
     }
     const msg = await Message.create({ body, user_id, chat_id });
-    return await Chat.updateOne({ _id: chat_id }, { $set: { last_msg: msg._id } });
+    await Chat.updateOne({ _id: chat_id }, { $set: { last_msg: msg._id } });
+    return msg;
   }
   async deleteMessage(msg_id) {    
     await Message.updateOne({ _id: msg_id }, { $set: { deleted_at: new Date() } });

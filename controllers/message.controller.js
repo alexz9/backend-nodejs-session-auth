@@ -22,8 +22,8 @@ class MessageController {
   async createMessage(req, res, next) {
     try {
       const { recipient_id, msg, chat_id } = req.body;
-      await messageService.sendMessage(chat_id, msg, req.user.id, recipient_id);
-      socketController.sendMessage(chat_id, recipient_id, msg);
+      const msgData = await messageService.createMessage(chat_id, msg, req.user.id, recipient_id);
+      socketController.sendMessage(req.user.id, recipient_id, msgData);
       res.json({ success: true });
     } catch (error) {
       console.log(error);

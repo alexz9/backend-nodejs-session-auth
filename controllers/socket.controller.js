@@ -19,10 +19,14 @@ class SocketController {
       console.log(error)
     }
   }
-  sendMessage = (chat_id, recipient_id, message) => {
+  sendMessage = (user_id, recipient_id, msg) => {
     try {
-      const ws = this.clients[recipient_id];
-      if (ws) ws.send(JSON.stringify({ message, chat_id }));
+      if(this.clients[recipient_id]){
+        this.clients[recipient_id].send(JSON.stringify(msg));
+      }
+      if(this.clients[user_id]){
+        this.clients[user_id].send(JSON.stringify(msg));
+      }      
     } catch (error) {
       console.log(error);
     }
